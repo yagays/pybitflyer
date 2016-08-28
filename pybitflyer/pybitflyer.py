@@ -10,11 +10,11 @@ import hashlib
 class API(object):
 
     def __init__(self, api_key=None, api_secret=None):
-        self.api_url = 'https://api.bitflyer.jp'
+        self.api_url = "https://api.bitflyer.jp"
         self.api_key = api_key
         self.api_secret = api_secret
 
-    def request(self, endpoint, method='GET', params=None):
+    def request(self, endpoint, method="GET", params=None):
         url = self.api_url + endpoint
         body = ""
         if method == "POST":
