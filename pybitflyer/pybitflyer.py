@@ -5,6 +5,7 @@ import requests
 import time
 import hmac
 import hashlib
+from .exception import AuthException
 
 
 class API(object):
@@ -17,6 +18,8 @@ class API(object):
     def request(self, endpoint, method="GET", params=None):
         url = self.api_url + endpoint
         body = ""
+        auth_header = None
+
         if method == "POST":
             body = json.dumps(params)
 
@@ -167,6 +170,9 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#get-account-asset-balance
         """
+        if not all([self.api_key, self.api_secret]):
+            raise AuthException()
+
         endpoint = "/v1/me/getbalance"
         return self.request(endpoint, params=params)
 
@@ -188,6 +194,9 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#get-margin-status
         """
+        if not all([self.api_key, self.api_secret]):
+            raise AuthException()
+
         endpoint = "/v1/me/getcollateral"
         return self.request(endpoint, params=params)
 
@@ -207,6 +216,9 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#get-bitcoin-ethereum-deposit-addresses
         """
+        if not all([self.api_key, self.api_secret]):
+            raise AuthException()
+
         endpoint = "/v1/me/getaddresses"
         return self.request(endpoint, params=params)
 
@@ -229,6 +241,9 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#get-bitcoin-ether-deposit-history
         """
+        if not all([self.api_key, self.api_secret]):
+            raise AuthException()
+
         endpoint = "/v1/me/getcoinins"
         return self.request(endpoint, params=params)
 
@@ -264,6 +279,9 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#bitcoin-ethereum-external-delivery
         """
+        if not all([self.api_key, self.api_secret]):
+            raise AuthException()
+
         endpoint = "/v1/me/sendcoin"
         return self.request(endpoint, "POST", params=params)
 
@@ -287,6 +305,9 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#get-bitcoin-ether-transaction-history
         """
+        if not all([self.api_key, self.api_secret]):
+            raise AuthException()
+
         endpoint = "/v1/me/getcoinouts"
         return self.request(endpoint, params=params)
 
@@ -307,6 +328,9 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#get-summary-of-bank-accounts
         """
+        if not all([self.api_key, self.api_secret]):
+            raise AuthException()
+
         endpoint = "/v1/me/getbankaccounts"
         return self.request(endpoint, params=params)
 
@@ -329,6 +353,9 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#get-cash-deposits
         """
+        if not all([self.api_key, self.api_secret]):
+            raise AuthException()
+
         endpoint = "/v1/me/getdeposits"
         return self.request(endpoint, params=params)
 
@@ -357,6 +384,9 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#cancelling-deposits
         """
+        if not all([self.api_key, self.api_secret]):
+            raise AuthException()
+
         endpoint = "/v1/me/withdraw"
         return self.request(endpoint, "POST", params=params)
 
@@ -379,6 +409,9 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#get-deposit-cancellation-history
         """
+        if not all([self.api_key, self.api_secret]):
+            raise AuthException()
+
         endpoint = "/v1/me/getwithdrawals"
         return self.request(endpoint, params=params)
 
@@ -409,6 +442,9 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#send-a-new-order
         """
+        if not all([self.api_key, self.api_secret]):
+            raise AuthException()
+
         endpoint = "/v1/me/sendchildorder"
         return self.request(endpoint, "POST", params=params)
 
@@ -435,6 +471,9 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#cancel-order
         """
+        if not all([self.api_key, self.api_secret]):
+            raise AuthException()
+
         endpoint = "/v1/me/cancelchildorder"
         return self.request(endpoint, "POST", params=params)
 
@@ -488,6 +527,9 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#submit-new-parent-order-special-order
         """
+        if not all([self.api_key, self.api_secret]):
+            raise AuthException()
+
         endpoint = "/v1/me/sendparentorder"
         return self.request(endpoint, "POST", params=params)
 
@@ -515,6 +557,9 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#cancel-parent-order
         """
+        if not all([self.api_key, self.api_secret]):
+            raise AuthException()
+
         endpoint = "/v1/me/cancelparentorder"
         return self.request(endpoint, "POST", params=params)
 
@@ -537,6 +582,9 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#cancel-all-orders
         """
+        if not all([self.api_key, self.api_secret]):
+            raise AuthException()
+
         endpoint = "/v1/me/cancelallchildorders"
         return self.request(endpoint, "POST", params=params)
 
@@ -563,6 +611,9 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#list-orders
         """
+        if not all([self.api_key, self.api_secret]):
+            raise AuthException()
+
         endpoint = "/v1/me/getchildorders"
         return self.request(endpoint, params=params)
 
@@ -594,6 +645,9 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#list-parent-orders
         """
+        if not all([self.api_key, self.api_secret]):
+            raise AuthException()
+
         endpoint = "/v1/me/getparentorders"
         return self.request(endpoint, params=params)
 
@@ -617,6 +671,9 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#get-parent-order-details
         """
+        if not all([self.api_key, self.api_secret]):
+            raise AuthException()
+
         endpoint = "/v1/me/getparentorder"
         return self.request(endpoint, params=params)
 
@@ -638,6 +695,9 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#list-executions
         """
+        if not all([self.api_key, self.api_secret]):
+            raise AuthException()
+
         endpoint = "/v1/me/getexecutions"
         return self.request(endpoint, params=params)
 
@@ -656,5 +716,8 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#get-open-interest-summary
         """
+        if not all([self.api_key, self.api_secret]):
+            raise AuthException()
+
         endpoint = "/v1/me/getpositions"
         return self.request(endpoint, params=params)
