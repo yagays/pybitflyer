@@ -6,7 +6,7 @@ setup(
     name="pybitflyer",
     packages=['pybitflyer'],
     version="0.1.1",
-    description="Python wrapper for Bitflyer's REST API.",
+    description="Python wrapper for bitFlyer's REST API.",
     author="yag_ays",
     author_email="yanagi.ayase@gmail.com",
     url="https://github.com/yagays/pybitflyer",
