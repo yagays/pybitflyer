@@ -5,6 +5,7 @@ import requests
 import time
 import hmac
 import hashlib
+import urllib
 from .exception import AuthException
 
 
@@ -22,6 +23,8 @@ class API(object):
 
         if method == "POST":
             body = json.dumps(params)
+        else:
+            body = "?" + urllib.parse.urlencode(params)
 
         if self.api_key and self.api_secret:
             access_timestamp = str(time.time())
