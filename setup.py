@@ -5,7 +5,7 @@ from setuptools import setup
 setup(
     name="pybitflyer",
     packages=['pybitflyer'],
-    version="0.1.2",
+    version="0.1.3",
     description="Python wrapper for bitFlyer's REST API.",
     author="yag_ays",
     author_email="yanagi.ayase@gmail.com",
