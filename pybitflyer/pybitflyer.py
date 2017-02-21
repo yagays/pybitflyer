@@ -54,7 +54,10 @@ class API(object):
             print(e)
             sys.exit(1)
 
-        content = json.loads(response.content.decode("utf-8"))
+        content = ""
+        if len(response.content) > 0:
+            content = json.loads(response.content.decode("utf-8"))
+
         return content
 
     """HTTP Public API"""
