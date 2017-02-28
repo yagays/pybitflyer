@@ -7,7 +7,7 @@
 pybitflyer
 ==========
 
-``pybitflyer`` is a python wrapper for Bitflyer's REST API.
+``pybitflyer`` is a python wrapper for bitFlyer's REST API.
 
 Install
 -------
