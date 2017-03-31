@@ -728,3 +728,24 @@ class API(object):
 
         endpoint = "/v1/me/getpositions"
         return self.request(endpoint, params=params)
+
+    def gettradingcommission(self, **params):
+        """
+
+        API Type
+        --------
+        HTTP Private API
+
+        Parameters
+        ----------
+        product_code: Required. Designate "BTC_JPY", "FX_BTC_JPY" or "ETH_BTC".
+
+        Docs
+        ----
+        https://lightning.bitflyer.jp/docs?lang=en#get-trading-commission
+        """
+        if not all([self.api_key, self.api_secret]):
+            raise AuthException()
+
+        endpoint = "/v1/me/gettradingcommission"
+        return self.request(endpoint, params=params)
