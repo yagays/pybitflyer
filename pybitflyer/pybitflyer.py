@@ -52,7 +52,7 @@ class API(object):
                     response = s.post(url, data=json.dumps(params))
         except requests.RequestException as e:
             print(e)
-            sys.exit(1)
+            raise e
 
         content = ""
         if len(response.content) > 0:
