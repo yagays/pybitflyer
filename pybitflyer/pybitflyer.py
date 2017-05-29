@@ -50,7 +50,7 @@ class API(object):
                     response = s.get(url, params=params)
                 else:  # method == "POST":
                     response = s.post(url, data=json.dumps(params))
-        except RequestException as e:
+        except requests.RequestException as e:
             print(e)
             sys.exit(1)
 
