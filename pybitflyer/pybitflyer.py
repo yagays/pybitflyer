@@ -207,6 +207,30 @@ class API(object):
         endpoint = "/v1/me/getcollateral"
         return self.request(endpoint, params=params)
 
+    def getcollateralhistory(self, **params):
+        """Get Margin Change History
+
+        API Type
+        --------
+        HTTP Private API
+
+        Response
+        --------
+        collateral: This is the amount of deposited in Japanese Yen.
+        open_position_pnl: This is the profit or loss from valuation.
+        require_collateral: This is the current required margin.
+        keep_rate: This is the current maintenance margin.
+
+        Docs
+        ----
+        https://lightning.bitflyer.jp/docs?lang=en#get-margin-change-history
+        """
+        if not all([self.api_key, self.api_secret]):
+            raise AuthException()
+
+        endpoint = "/v1/me/getcollateralhistory"
+        return self.request(endpoint, params=params)
+
     def getaddresses(self, **params):
         """Get Bitcoin/Ethereum Deposit Addresses
 
