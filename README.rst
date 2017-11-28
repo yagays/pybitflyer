@@ -31,7 +31,8 @@ Usage
 .. code:: python
 
   import pybitflyer
-  api = pybitflyer.API(api_key="xxx...", api_secret="yyy...")
+  with pybitflyer.API(api_key="xxx...", api_secret="yyy...") as api:
+      # call some methods shown below
 
 If you use HTTP Public API, API Key and API Secret can be omitted.
 
