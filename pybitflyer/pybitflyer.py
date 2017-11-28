@@ -18,6 +18,12 @@ class API(object):
         self.api_secret = api_secret
         self.sess = requests.Session()
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        self.close()
+
     def close(self):
         self.sess.close()
 
