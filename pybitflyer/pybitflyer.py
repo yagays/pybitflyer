@@ -16,6 +16,10 @@ class API(object):
     def __init__(self, api_key=None, api_secret=None):
         self.api_key = api_key
         self.api_secret = api_secret
+        self.sess = requests.Session()
+
+    def close(self):
+        self.sess.close()
 
     def _request(self, endpoint, method="GET", params=None):
         url = self.api_url + endpoint
@@ -43,14 +47,13 @@ class API(object):
             }
 
         try:
-            with requests.Session() as s:
-                if auth_header:
-                    s.headers.update(auth_header)
+            if auth_header:
+                self.sess.headers.update(auth_header)
 
-                if method == "GET":
-                    response = s.get(url, params=params)
-                else:  # method == "POST":
-                    response = s.post(url, data=json.dumps(params))
+            if method == "GET":
+                response = self.sess.get(url, params=params)
+            else:  # method == "POST":
+                response = self.sess.post(url, data=json.dumps(params))
         except requests.RequestException as e:
             print(e)
             raise
