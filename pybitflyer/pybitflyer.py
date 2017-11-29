@@ -10,13 +10,44 @@ from .exception import AuthException
 
 
 class API(object):
+    """
+    Python API for bitFlyer
 
-    def __init__(self, api_key=None, api_secret=None):
-        self.api_url = "https://api.bitflyer.jp"
+    API(api_key=None, api_secret=None, keep_session=False)
+
+    Parameters:
+        - api_key -- api key
+        - api_secret -- api secret
+        - keep_session -- whether to keep session (default: False). If True,
+                          API object keeps HTTP session.
+    """
+
+    api_url = "https://api.bitflyer.jp"
+
+    def __init__(self, api_key=None, api_secret=None, keep_session=False):
         self.api_key = api_key
         self.api_secret = api_secret
+        self.sess = self._new_session() if keep_session else None
 
-    def request(self, endpoint, method="GET", params=None):
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        self.close()
+
+    def _new_session(self):
+        return requests.Session()
+
+    def close(self):
+        """
+        close HTTP session
+
+        If set 'keep_session' False, nothing happens when called.
+        """
+        if self.sess:
+            self.sess.close()
+
+    def _request(self, endpoint, method="GET", params=None):
         url = self.api_url + endpoint
         body = ""
         auth_header = None
@@ -41,18 +72,21 @@ class API(object):
                 "Content-Type": "application/json"
             }
 
+        sess = self.sess or self._new_session()
         try:
-            with requests.Session() as s:
-                if auth_header:
-                    s.headers.update(auth_header)
+            if auth_header:
+                sess.headers.update(auth_header)
 
-                if method == "GET":
-                    response = s.get(url, params=params)
-                else:  # method == "POST":
-                    response = s.post(url, data=json.dumps(params))
+            if method == "GET":
+                response = sess.get(url, params=params)
+            else:  # method == "POST":
+                response = sess.post(url, data=json.dumps(params))
         except requests.RequestException as e:
             print(e)
-            raise e
+            raise
+        finally:
+            if sess is not self.sess:
+                sess.close()
 
         content = ""
         if len(response.content) > 0:
@@ -78,7 +112,7 @@ class API(object):
         https://lightning.bitflyer.jp/docs?lang=en#order-book
         """
         endpoint = "/v1/board"
-        return self.request(endpoint, params=params)
+        return self._request(endpoint, params=params)
 
     def ticker(self, **params):
         """Ticker
@@ -96,7 +130,7 @@ class API(object):
         https://lightning.bitflyer.jp/docs?lang=en#ticker
         """
         endpoint = "/v1/ticker"
-        return self.request(endpoint, params=params)
+        return self._request(endpoint, params=params)
 
     def executions(self, **params):
         """Execution History
@@ -115,7 +149,7 @@ class API(object):
         https://lightning.bitflyer.jp/docs?lang=en#execution-history
         """
         endpoint = "/v1/executions"
-        return self.request(endpoint, params=params)
+        return self._request(endpoint, params=params)
 
     def gethealth(self, **params):
         """Exchange status
@@ -143,7 +177,7 @@ class API(object):
         https://lightning.bitflyer.jp/docs?lang=en#exchange-status
         """
         endpoint = "/v1/gethealth"
-        return self.request(endpoint, params=params)
+        return self._request(endpoint, params=params)
 
     def getchats(self, **params):
         """ Chat
@@ -162,7 +196,7 @@ class API(object):
         https://lightning.bitflyer.jp/docs?lang=en#chat
         """
         endpoint = "/v1/getchats"
-        return self.request(endpoint, params=params)
+        return self._request(endpoint, params=params)
 
     """HTTP Private API"""
 
@@ -181,7 +215,7 @@ class API(object):
             raise AuthException()
 
         endpoint = "/v1/me/getbalance"
-        return self.request(endpoint, params=params)
+        return self._request(endpoint, params=params)
 
     def getcollateral(self, **params):
         """Get Margin Status
@@ -205,7 +239,7 @@ class API(object):
             raise AuthException()
 
         endpoint = "/v1/me/getcollateral"
-        return self.request(endpoint, params=params)
+        return self._request(endpoint, params=params)
 
     def getcollateralhistory(self, **params):
         """Get Margin Change History
@@ -229,7 +263,7 @@ class API(object):
             raise AuthException()
 
         endpoint = "/v1/me/getcollateralhistory"
-        return self.request(endpoint, params=params)
+        return self._request(endpoint, params=params)
 
     def getaddresses(self, **params):
         """Get Bitcoin/Ethereum Deposit Addresses
@@ -251,7 +285,7 @@ class API(object):
             raise AuthException()
 
         endpoint = "/v1/me/getaddresses"
-        return self.request(endpoint, params=params)
+        return self._request(endpoint, params=params)
 
     def getcoinins(self, **params):
         """Get Bitcoin/Ether Deposit History
@@ -276,7 +310,7 @@ class API(object):
             raise AuthException()
 
         endpoint = "/v1/me/getcoinins"
-        return self.request(endpoint, params=params)
+        return self._request(endpoint, params=params)
 
     def sendcoin(self, **params):
         """Bitcoin/Ethereum External Delivery
@@ -314,7 +348,7 @@ class API(object):
             raise AuthException()
 
         endpoint = "/v1/me/sendcoin"
-        return self.request(endpoint, "POST", params=params)
+        return self._request(endpoint, "POST", params=params)
 
     def getcoinouts(self, **params):
         """Get Bitcoin/Ether Transaction History
@@ -340,7 +374,7 @@ class API(object):
             raise AuthException()
 
         endpoint = "/v1/me/getcoinouts"
-        return self.request(endpoint, params=params)
+        return self._request(endpoint, params=params)
 
     def getbankaccounts(self, **params):
         """Get Summary of Bank Accounts
@@ -363,7 +397,7 @@ class API(object):
             raise AuthException()
 
         endpoint = "/v1/me/getbankaccounts"
-        return self.request(endpoint, params=params)
+        return self._request(endpoint, params=params)
 
     def getdeposits(self, **params):
         """Get Cash Deposits
@@ -388,7 +422,7 @@ class API(object):
             raise AuthException()
 
         endpoint = "/v1/me/getdeposits"
-        return self.request(endpoint, params=params)
+        return self._request(endpoint, params=params)
 
     def withdraw(self, **params):
         """Cancelling deposits
@@ -419,7 +453,7 @@ class API(object):
             raise AuthException()
 
         endpoint = "/v1/me/withdraw"
-        return self.request(endpoint, "POST", params=params)
+        return self._request(endpoint, "POST", params=params)
 
     def getwithdrawals(self, **params):
         """Get Deposit Cancellation History
@@ -444,7 +478,7 @@ class API(object):
             raise AuthException()
 
         endpoint = "/v1/me/getwithdrawals"
-        return self.request(endpoint, params=params)
+        return self._request(endpoint, params=params)
 
     def sendchildorder(self, **params):
         """Send a New Order
@@ -477,7 +511,7 @@ class API(object):
             raise AuthException()
 
         endpoint = "/v1/me/sendchildorder"
-        return self.request(endpoint, "POST", params=params)
+        return self._request(endpoint, "POST", params=params)
 
     def cancelchildorder(self, **params):
         """Cancel Order
@@ -506,7 +540,7 @@ class API(object):
             raise AuthException()
 
         endpoint = "/v1/me/cancelchildorder"
-        return self.request(endpoint, "POST", params=params)
+        return self._request(endpoint, "POST", params=params)
 
     def sendparentorder(self, **params):
         """Submit New Parent Order (Special order)
@@ -562,7 +596,7 @@ class API(object):
             raise AuthException()
 
         endpoint = "/v1/me/sendparentorder"
-        return self.request(endpoint, "POST", params=params)
+        return self._request(endpoint, "POST", params=params)
 
     def cancelparentorder(self, **params):
         """Cancel parent order
@@ -592,7 +626,7 @@ class API(object):
             raise AuthException()
 
         endpoint = "/v1/me/cancelparentorder"
-        return self.request(endpoint, "POST", params=params)
+        return self._request(endpoint, "POST", params=params)
 
     def cancelallchildorders(self, **params):
         """Cancel All Orders
@@ -617,7 +651,7 @@ class API(object):
             raise AuthException()
 
         endpoint = "/v1/me/cancelallchildorders"
-        return self.request(endpoint, "POST", params=params)
+        return self._request(endpoint, "POST", params=params)
 
     def getchildorders(self, **params):
         """List Orders
@@ -646,7 +680,7 @@ class API(object):
             raise AuthException()
 
         endpoint = "/v1/me/getchildorders"
-        return self.request(endpoint, params=params)
+        return self._request(endpoint, params=params)
 
     def getparentorders(self, **params):
         """List Parent Orders
@@ -680,7 +714,7 @@ class API(object):
             raise AuthException()
 
         endpoint = "/v1/me/getparentorders"
-        return self.request(endpoint, params=params)
+        return self._request(endpoint, params=params)
 
     def getparentorder(self, **params):
         """Get Parent Order Details
@@ -706,7 +740,7 @@ class API(object):
             raise AuthException()
 
         endpoint = "/v1/me/getparentorder"
-        return self.request(endpoint, params=params)
+        return self._request(endpoint, params=params)
 
     def getexecutions(self, **params):
         """List Executions
@@ -730,7 +764,7 @@ class API(object):
             raise AuthException()
 
         endpoint = "/v1/me/getexecutions"
-        return self.request(endpoint, params=params)
+        return self._request(endpoint, params=params)
 
     def getpositions(self, **params):
         """
@@ -751,7 +785,7 @@ class API(object):
             raise AuthException()
 
         endpoint = "/v1/me/getpositions"
-        return self.request(endpoint, params=params)
+        return self._request(endpoint, params=params)
 
     def gettradingcommission(self, **params):
         """
@@ -772,4 +806,4 @@ class API(object):
             raise AuthException()
 
         endpoint = "/v1/me/gettradingcommission"
-        return self.request(endpoint, params=params)
+        return self._request(endpoint, params=params)
