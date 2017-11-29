@@ -11,8 +11,9 @@ from .exception import AuthException
 
 class API(object):
 
+    api_url = "https://api.bitflyer.jp"
+
     def __init__(self, api_key=None, api_secret=None):
-        self.api_url = "https://api.bitflyer.jp"
         self.api_key = api_key
         self.api_secret = api_secret
 
@@ -52,7 +53,7 @@ class API(object):
                     response = s.post(url, data=json.dumps(params))
         except requests.RequestException as e:
             print(e)
-            raise e
+            raise
 
         content = ""
         if len(response.content) > 0:
