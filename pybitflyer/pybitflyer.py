@@ -13,9 +13,17 @@ class API(object):
 
     api_url = "https://api.bitflyer.jp"
 
-    def __init__(self, api_key=None, api_secret=None):
+    def __init__(self, api_key=None, api_secret=None, keep_session=False):
         self.api_key = api_key
         self.api_secret = api_secret
+        self.sess = self._new_session() if keep_session else None
+
+    def _new_session(self):
+        return requests.Session()
+
+    def close(self):
+        if self.sess:
+            self.sess.close()
 
     def _request(self, endpoint, method="GET", params=None):
         url = self.api_url + endpoint
@@ -42,18 +50,21 @@ class API(object):
                 "Content-Type": "application/json"
             }
 
+        sess = self.sess or self._new_session()
         try:
-            with requests.Session() as s:
-                if auth_header:
-                    s.headers.update(auth_header)
+            if auth_header:
+                sess.headers.update(auth_header)
 
-                if method == "GET":
-                    response = s.get(url, params=params)
-                else:  # method == "POST":
-                    response = s.post(url, data=json.dumps(params))
+            if method == "GET":
+                response = sess.get(url, params=params)
+            else:  # method == "POST":
+                response = sess.post(url, data=json.dumps(params))
         except requests.RequestException as e:
             print(e)
             raise
+        finally:
+            if sess is not self.sess:
+                sess.close()
 
         content = ""
         if len(response.content) > 0:
