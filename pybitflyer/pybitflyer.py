@@ -18,6 +18,12 @@ class API(object):
         self.api_secret = api_secret
         self.sess = self._new_session() if keep_session else None
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        self.close()
+
     def _new_session(self):
         return requests.Session()
 
