@@ -10,6 +10,17 @@ from .exception import AuthException
 
 
 class API(object):
+    """
+    Python API for bitFlyer
+
+    API(api_key=None, api_secret=None, keep_session=False)
+
+    Parameters:
+        - api_key -- api key
+        - api_secret -- api secret
+        - keep_session -- whether to keep session (default: False). If True,
+                          API object keeps HTTP session.
+    """
 
     api_url = "https://api.bitflyer.jp"
 
@@ -28,6 +39,11 @@ class API(object):
         return requests.Session()
 
     def close(self):
+        """
+        close HTTP session
+
+        If set 'keep_session' False, nothing happens when called.
+        """
         if self.sess:
             self.sess.close()
 
