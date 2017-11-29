@@ -31,7 +31,17 @@ Usage
 .. code:: python
 
   import pybitflyer
+
   api = pybitflyer.API(api_key="xxx...", api_secret="yyy...")
+  # Call some methods shown below
+
+or
+
+.. code:: python
+
+  # This way enables HTTP Keep-Alive
+  with pybitflyer.API(api_key="xxx...", api_secret="yyy...", keep_session=True) as api:
+      # Call some methods shown below
 
 If you use HTTP Public API, API Key and API Secret can be omitted.
 
