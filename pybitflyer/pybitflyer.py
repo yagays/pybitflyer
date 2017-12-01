@@ -11,10 +11,11 @@ from .exception import AuthException
 
 class API(object):
 
-    def __init__(self, api_key=None, api_secret=None):
+    def __init__(self, api_key=None, api_secret=None, timeout=None):
         self.api_url = "https://api.bitflyer.jp"
         self.api_key = api_key
         self.api_secret = api_secret
+        self.timeout = timeout
 
     def request(self, endpoint, method="GET", params=None):
         url = self.api_url + endpoint
@@ -47,9 +48,9 @@ class API(object):
                     s.headers.update(auth_header)
 
                 if method == "GET":
-                    response = s.get(url, params=params)
+                    response = s.get(url, params=params, timeout=self.timeout)
                 else:  # method == "POST":
-                    response = s.post(url, data=json.dumps(params))
+                    response = s.post(url, data=json.dumps(params), timeout=self.timeout)
         except requests.RequestException as e:
             print(e)
             raise e
