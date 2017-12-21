@@ -118,6 +118,24 @@ class API(object):
         endpoint = "/v1/executions"
         return self.request(endpoint, params=params)
 
+    def getboardstate(self, **params):
+        """Order book status
+
+        API Type
+        --------
+        HTTP Public API
+
+        Parameters
+        ----------
+        product_code: Designate "BTC_JPY", "FX_BTC_JPY" or "ETC_BTC".
+
+        Docs
+        ----
+        https://lightning.bitflyer.jp/docs?lang=ja#%E6%9D%BF%E3%81%AE%E7%8A%B6%E6%85%8B
+        """
+        endpoint = "/v1/getboardstate"
+        return self.request(endpoint, params=params)
+
     def gethealth(self, **params):
         """Exchange status
         This will allow you to determine the current status of the exchange.
