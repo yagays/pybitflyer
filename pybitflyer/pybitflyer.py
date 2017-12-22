@@ -48,7 +48,7 @@ class API(object):
                     s.headers.update(auth_header)
 
                 if method == "GET":
-                    response = s.get(url, params=params, timeout=self.timeout)
+                    response = s.get(url + body, timeout=self.timeout)
                 else:  # method == "POST":
                     response = s.post(url, data=json.dumps(params), timeout=self.timeout)
         except requests.RequestException as e:
