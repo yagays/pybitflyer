@@ -67,6 +67,31 @@ You need to specify API key and API Secret by creating pybitflyer.API instance.
                      time_in_force="GTC"
                      )
 
+Async Module
+~~~~~~~~~~~~
+
+If you use Python 3.5.3 or higher, you can use asynchronous client.
+
+.. code:: python
+
+  import asyncio
+  import pybitflyer.async
+
+  loop = asyncio.get_event_loop()
+  api = pybitflyer.async.API(loop=loop)
+
+  # send a single request
+  loop.run_until_complete(api.ticker())
+
+  # you can send multiple requests asynchronously
+  coros = [api.gethealth(), api.ticker()]
+  results = loop.run_until_complete(asyncio.gather(*coros))
+  # the results are stored in the same order as coros
+  for result in results:
+      print(result)
+
+
+
 More detail
 ~~~~~~~~~~~
 
