@@ -50,12 +50,18 @@ class API(pybitflyer.API):
             try:
                 if method == 'GET':
                     async with s.get(url, params=params, timeout=self.timeout, headers=header) as r:
-                        contents_json = await r.json()
-                        return contents_json
+                        try:
+                            contents = await r.json()
+                        except:
+                            contents = await r.text()
+                        return contents
                 else:  # method == "POST":
                     async with s.post(url, data=json.dumps(params), timeout=self.timeout, headers=header) as r:
-                        contents_json = await r.json()
-                        return contents_json
+                        try:
+                            contents = await r.json()
+                        except:
+                            contents = await r.text()
+                        return contents
             except Exception as e:
                 print(e)
                 raise e
