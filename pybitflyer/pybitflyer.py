@@ -58,6 +58,8 @@ class API(object):
         content = ""
         if len(response.content) > 0:
             content = json.loads(response.content.decode("utf-8"))
+        else:
+            content = response
 
         return content
 
