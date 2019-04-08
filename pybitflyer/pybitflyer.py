@@ -226,6 +226,27 @@ class API(object):
         endpoint = "/v1/me/getcollateral"
         return self.request(endpoint, params=params)
 
+    def getcollateralaccounts(self, **params):
+        """Get Margin Accounts
+
+        API Type
+        --------
+        HTTP Private API
+
+        Response
+        --------
+        Obtain details of your collateral balances (multiple currencies supported).
+
+        Docs
+        ----
+        https://lightning.bitflyer.com/docs?lang=en#get-margin-status
+        """
+        if not all([self.api_key, self.api_secret]):
+            raise AuthException()
+
+        endpoint = "/v1/me/getcollateralaccounts"
+        return self.request(endpoint, params=params)
+
     def getcollateralhistory(self, **params):
         """Get Margin Change History
 
