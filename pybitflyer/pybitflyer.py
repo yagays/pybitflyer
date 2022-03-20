@@ -9,6 +9,14 @@ import urllib
 from .exception import AuthException
 
 
+def private_api(method):
+    def wrapper(self, *args, **kwargs):
+        if not all([self.api_key, self.api_secret]):
+            raise AuthException()
+        return method(self, *args, **kwargs)
+    return wrapper
+
+
 class API(object):
 
     def __init__(self, api_key=None, api_secret=None, timeout=None):
@@ -185,6 +193,7 @@ class API(object):
 
     """HTTP Private API"""
 
+    @private_api
     def getbalance(self, **params):
         """Get Account Asset Balance
 
@@ -196,12 +205,10 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#get-account-asset-balance
         """
-        if not all([self.api_key, self.api_secret]):
-            raise AuthException()
-
         endpoint = "/v1/me/getbalance"
         return self.request(endpoint, params=params)
 
+    @private_api
     def getcollateral(self, **params):
         """Get Margin Status
 
@@ -220,12 +227,10 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#get-margin-status
         """
-        if not all([self.api_key, self.api_secret]):
-            raise AuthException()
-
         endpoint = "/v1/me/getcollateral"
         return self.request(endpoint, params=params)
 
+    @private_api
     def getcollateralhistory(self, **params):
         """Get Margin Change History
 
@@ -244,12 +249,10 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#get-margin-change-history
         """
-        if not all([self.api_key, self.api_secret]):
-            raise AuthException()
-
         endpoint = "/v1/me/getcollateralhistory"
         return self.request(endpoint, params=params)
 
+    @private_api
     def getaddresses(self, **params):
         """Get Bitcoin/Ethereum Deposit Addresses
 
@@ -266,12 +269,10 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#get-bitcoin-ethereum-deposit-addresses
         """
-        if not all([self.api_key, self.api_secret]):
-            raise AuthException()
-
         endpoint = "/v1/me/getaddresses"
         return self.request(endpoint, params=params)
 
+    @private_api
     def getcoinins(self, **params):
         """Get Bitcoin/Ether Deposit History
 
@@ -291,12 +292,10 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#get-bitcoin-ether-deposit-history
         """
-        if not all([self.api_key, self.api_secret]):
-            raise AuthException()
-
         endpoint = "/v1/me/getcoinins"
         return self.request(endpoint, params=params)
 
+    @private_api
     def sendcoin(self, **params):
         """Bitcoin/Ethereum External Delivery
 
@@ -329,12 +328,10 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#bitcoin-ethereum-external-delivery
         """
-        if not all([self.api_key, self.api_secret]):
-            raise AuthException()
-
         endpoint = "/v1/me/sendcoin"
         return self.request(endpoint, "POST", params=params)
 
+    @private_api
     def getcoinouts(self, **params):
         """Get Bitcoin/Ether Transaction History
 
@@ -355,12 +352,10 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#get-bitcoin-ether-transaction-history
         """
-        if not all([self.api_key, self.api_secret]):
-            raise AuthException()
-
         endpoint = "/v1/me/getcoinouts"
         return self.request(endpoint, params=params)
 
+    @private_api
     def getbankaccounts(self, **params):
         """Get Summary of Bank Accounts
         Returns a summary of bank accounts registered to your account.
@@ -378,12 +373,10 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#get-summary-of-bank-accounts
         """
-        if not all([self.api_key, self.api_secret]):
-            raise AuthException()
-
         endpoint = "/v1/me/getbankaccounts"
         return self.request(endpoint, params=params)
 
+    @private_api
     def getdeposits(self, **params):
         """Get Cash Deposits
 
@@ -403,12 +396,10 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#get-cash-deposits
         """
-        if not all([self.api_key, self.api_secret]):
-            raise AuthException()
-
         endpoint = "/v1/me/getdeposits"
         return self.request(endpoint, params=params)
 
+    @private_api
     def withdraw(self, **params):
         """Cancelling deposits
 
@@ -434,12 +425,10 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#cancelling-deposits
         """
-        if not all([self.api_key, self.api_secret]):
-            raise AuthException()
-
         endpoint = "/v1/me/withdraw"
         return self.request(endpoint, "POST", params=params)
 
+    @private_api
     def getwithdrawals(self, **params):
         """Get Deposit Cancellation History
 
@@ -459,12 +448,10 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#get-deposit-cancellation-history
         """
-        if not all([self.api_key, self.api_secret]):
-            raise AuthException()
-
         endpoint = "/v1/me/getwithdrawals"
         return self.request(endpoint, params=params)
 
+    @private_api
     def sendchildorder(self, **params):
         """Send a New Order
 
@@ -492,12 +479,10 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#send-a-new-order
         """
-        if not all([self.api_key, self.api_secret]):
-            raise AuthException()
-
         endpoint = "/v1/me/sendchildorder"
         return self.request(endpoint, "POST", params=params)
 
+    @private_api
     def cancelchildorder(self, **params):
         """Cancel Order
 
@@ -521,12 +506,10 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#cancel-order
         """
-        if not all([self.api_key, self.api_secret]):
-            raise AuthException()
-
         endpoint = "/v1/me/cancelchildorder"
         return self.request(endpoint, "POST", params=params)
 
+    @private_api
     def sendparentorder(self, **params):
         """Submit New Parent Order (Special order)
         It is possible to place orders including logic other than simple limit orders (LIMIT) and market orders (MARKET). Such orders are handled as parent orders. By using a special order, it is possible to place orders in response to market conditions or place multiple associated orders.
@@ -577,12 +560,10 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#submit-new-parent-order-special-order
         """
-        if not all([self.api_key, self.api_secret]):
-            raise AuthException()
-
         endpoint = "/v1/me/sendparentorder"
         return self.request(endpoint, "POST", params=params)
 
+    @private_api
     def cancelparentorder(self, **params):
         """Cancel parent order
         Parent orders can be canceled in the same manner as regular orders. If a parent order is canceled, the placed orders associated with that order will all be canceled.
@@ -607,12 +588,10 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#cancel-parent-order
         """
-        if not all([self.api_key, self.api_secret]):
-            raise AuthException()
-
         endpoint = "/v1/me/cancelparentorder"
         return self.request(endpoint, "POST", params=params)
 
+    @private_api
     def cancelallchildorders(self, **params):
         """Cancel All Orders
 
@@ -632,12 +611,10 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#cancel-all-orders
         """
-        if not all([self.api_key, self.api_secret]):
-            raise AuthException()
-
         endpoint = "/v1/me/cancelallchildorders"
         return self.request(endpoint, "POST", params=params)
 
+    @private_api
     def getchildorders(self, **params):
         """List Orders
 
@@ -661,12 +638,10 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#list-orders
         """
-        if not all([self.api_key, self.api_secret]):
-            raise AuthException()
-
         endpoint = "/v1/me/getchildorders"
         return self.request(endpoint, params=params)
 
+    @private_api
     def getparentorders(self, **params):
         """List Parent Orders
 
@@ -695,12 +670,10 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#list-parent-orders
         """
-        if not all([self.api_key, self.api_secret]):
-            raise AuthException()
-
         endpoint = "/v1/me/getparentorders"
         return self.request(endpoint, params=params)
 
+    @private_api
     def getparentorder(self, **params):
         """Get Parent Order Details
 
@@ -721,12 +694,10 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#get-parent-order-details
         """
-        if not all([self.api_key, self.api_secret]):
-            raise AuthException()
-
         endpoint = "/v1/me/getparentorder"
         return self.request(endpoint, params=params)
 
+    @private_api
     def getexecutions(self, **params):
         """List Executions
 
@@ -745,12 +716,10 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#list-executions
         """
-        if not all([self.api_key, self.api_secret]):
-            raise AuthException()
-
         endpoint = "/v1/me/getexecutions"
         return self.request(endpoint, params=params)
 
+    @private_api
     def getpositions(self, **params):
         """
 
@@ -766,12 +735,10 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#get-open-interest-summary
         """
-        if not all([self.api_key, self.api_secret]):
-            raise AuthException()
-
         endpoint = "/v1/me/getpositions"
         return self.request(endpoint, params=params)
 
+    @private_api
     def gettradingcommission(self, **params):
         """
 
@@ -787,8 +754,5 @@ class API(object):
         ----
         https://lightning.bitflyer.jp/docs?lang=en#get-trading-commission
         """
-        if not all([self.api_key, self.api_secret]):
-            raise AuthException()
-
         endpoint = "/v1/me/gettradingcommission"
         return self.request(endpoint, params=params)
